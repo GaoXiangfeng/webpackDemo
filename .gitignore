@@ -1,0 +1,13 @@
+/dist/*
+/.idea/*
+/node_modules/*
+/build/vendor-manifest.json
+/bower_components/*
+/dll/*
+
+.editorconfig
+npm-debug.log
+DS_Store*
+.DS_Store*
+%USERPROFILE%
+node_modules
