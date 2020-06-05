@@ -158,7 +158,7 @@ module.exports = {
                         2.全部兼容性处理 --> @bable/polyfill (直接在代码中引用import '@bable/polyfill' 即可)
                             问题：我只要解决部分兼容问题，但是将所有兼容性代码全部引入，体积太大了
                         3.需要做兼容性处理：按需加载 --> corejs
-                    */
+
                     {
                         test: /\.js$/,
                         exclude: /node_modules/,
@@ -185,6 +185,8 @@ module.exports = {
                             cacheDirectory: true,
                         }
                     },
+                    */
+
                 ]
             }
         ]
