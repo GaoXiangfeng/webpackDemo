@@ -26,7 +26,7 @@ const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plug
 */
 
 /*
-    缓存：
+   1. 缓存：
         bable缓存：cacheDirectory: true,
         文件资源缓存：
             hash --> 每次webpack构建打包会生成的唯一的hash值
@@ -37,6 +37,16 @@ const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plug
             contenthash: 根据文件内容生成hash，不同内容生成不同的hash
 */
 
+/*
+    2.tree-shaking:去除无用代码
+        前提：1.必须使用es6模块化，2.开启production环境
+        减少代码体积
+        在package.json中配置
+            "sideEffects": false 所有代码都没有副作用（都可以进行tree-shaking）
+            问题：会把css/@bable/pollfill(副作用)文件干掉
+            "sideEffects": ["*.css"]  --> 不会将css文件干掉了
+
+*/
 const commonCssLoader = [
     'style-loader',//开发模式下使用
     //MiniCssExtractPlugin.loader,//提取css文件成单独文件
@@ -158,7 +168,6 @@ module.exports = {
                         2.全部兼容性处理 --> @bable/polyfill (直接在代码中引用import '@bable/polyfill' 即可)
                             问题：我只要解决部分兼容问题，但是将所有兼容性代码全部引入，体积太大了
                         3.需要做兼容性处理：按需加载 --> corejs
-
                     {
                         test: /\.js$/,
                         exclude: /node_modules/,
@@ -186,7 +195,32 @@ module.exports = {
                         }
                     },
                     */
-
+                    {
+                        test: /\.js$/,
+                        exclude: /node_modules/,
+                        loader: 'bable-loader',
+                        options: {
+                            presets: [
+                                [
+                                    '@bable/preset-env',
+                                    {
+                                        useBuiltIns: 'usage',//按需加载
+                                        //指定core-js的版本
+                                        corejs: {
+                                            version: 3
+                                        },
+                                        //指定兼容到哪个版本
+                                        targets: {
+                                            chrome: '60',
+                                            ie: '9'
+                                        }
+                                    }
+                                ]
+                            ],
+                            //开启bable缓存，第二次构建时，会读之前的缓存
+                            cacheDirectory: true,
+                        }
+                    },
                 ]
             }
         ]
